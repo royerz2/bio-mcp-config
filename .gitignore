@@ -1,0 +1,20 @@
+# Git Configuration
+.git/
+.DS_Store
+Thumbs.db
+
+# Environment files (never commit secrets)
+.env
+
+# Backup files created by install scripts
+*.backup.*
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+desktop.ini

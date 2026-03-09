@@ -1,0 +1,107 @@
+{
+  "servers": {
+    "biothings-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["biothings-mcp"]
+    },
+
+    "biomcp": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "biomcp-python",
+        "biomcp",
+        "run"
+      ],
+      "env": {
+        "CBIO_TOKEN": "${input:cbio-token}",
+        "CBIO_BASE_URL": "https://www.cbioportal.org/api",
+        "BIOMCP_USE_CONNECTION_POOL": "true"
+      }
+    },
+
+    "alex-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/drAbreu/alex-mcp.git@4.1.0",
+        "alex-mcp"
+      ],
+      "env": {
+        "OPENALEX_MAILTO": "${input:openalex-mailto}",
+        "OPENALEX_MAX_AUTHORS": "100",
+        "OPENALEX_RATE_PER_SEC": "10"
+      }
+    },
+
+    "semantic-scholar-fastmcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server.git",
+        "semantic-scholar-server"
+      ],
+      "env": {
+        "SEMANTIC_SCHOLAR_API_KEY": "${input:semantic-scholar-api-key}"
+      }
+    },
+
+    "academic-search-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/afrise/academic-search-mcp-server.git",
+        "academic-search-mcp-server"
+      ],
+      "env": {
+        "SEMANTIC_SCHOLAR_API_KEY": "${input:semantic-scholar-api-key}",
+        "CROSSREF_API_KEY": "${input:crossref-api-key}"
+      }
+    },
+
+    "medical-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@jamesanz/medical-mcp"
+      ],
+      "env": {
+        "CACHE_ENABLED": "true"
+      }
+    }
+  },
+
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "semantic-scholar-api-key",
+      "description": "Semantic Scholar API key (optional but recommended)",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "crossref-api-key",
+      "description": "CrossRef API key (optional)",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "openalex-mailto",
+      "description": "Your email (required for OpenAlex polite pool)",
+      "password": false
+    },
+    {
+      "type": "promptString",
+      "id": "cbio-token",
+      "description": "cBioPortal API token (optional)",
+      "password": true
+    }
+  ]
+}
