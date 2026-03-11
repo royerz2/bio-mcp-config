@@ -1,5 +1,10 @@
 Write-Host "Installing MCP configuration..." -ForegroundColor Cyan
 
+# Resolve repo root from script location (works regardless of current directory)
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Split-Path -Parent $scriptRoot
+$sourceConfig = Join-Path $repoRoot "mcp.vscode.json"
+
 # VS Code user profile MCP config location
 $vscodeUserPath = "$env:APPDATA\Code\User"
 $configFile = Join-Path $vscodeUserPath "mcp.json"
@@ -51,7 +56,7 @@ npx tsc
 Pop-Location
 
 # Copy config and fix path for Windows (HOME -> USERPROFILE)
-Copy-Item "mcp.vscode.json" $configFile -Force
+Copy-Item $sourceConfig $configFile -Force
 (Get-Content $configFile -Raw) -replace '\$\{env:HOME\}', '${env:USERPROFILE}' | Set-Content $configFile -NoNewline
 
 Write-Host "Config installed to: $configFile" -ForegroundColor Green

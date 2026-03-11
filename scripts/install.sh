@@ -3,6 +3,11 @@ set -e
 
 echo "Installing MCP configuration..."
 
+# Resolve repo root from script location (works regardless of current directory)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SOURCE_CONFIG="$REPO_ROOT/mcp.vscode.json"
+
 # Detect OS and set VS Code config path
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
@@ -63,7 +68,7 @@ echo "Installing/building medical-mcp..."
 )
 
 # Copy config
-cp mcp.vscode.json "$VSCODE_CONFIG"
+cp "$SOURCE_CONFIG" "$VSCODE_CONFIG"
 
 echo "Config installed to: $VSCODE_CONFIG"
 echo ""
