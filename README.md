@@ -27,8 +27,11 @@ cd $env:USERPROFILE\my-mcp-config
 ```
 
 This will:
-1. Copy `mcp.vscode.json` → VS Code user config location
+1. Copy `mcp.vscode.json` → VS Code user profile `mcp.json`
 2. Restart VS Code to pick up the new servers
+
+`MCP: List Servers` shows configured server names such as `biothings-mcp`, `biomcp`, and `medical-mcp`.
+It will not show `bio-mcp-config`, because this repository is only the configuration source.
 
 ### First run
 VS Code will prompt for API keys when each server first starts. Leave blank if you don't have keys (most work without them, just with lower rate limits).
@@ -57,9 +60,11 @@ To upgrade server versions, edit the version pins in `mcp.vscode.json` and commi
 
 ### "No servers found"
 Run `MCP: List Servers` in VS Code command palette. If empty, check that:
-- The config file was copied to the correct location (check install script output)
+- The config file was copied to the active VS Code MCP config file. Run `MCP: Open User Configuration` and confirm it opens the installed `mcp.json`
 - VS Code was restarted after installation
 - GitHub Copilot extension is installed and enabled
+
+Expected entries are the individual server names from `mcp.vscode.json`, not the repo name.
 
 ### "Server failed to start"
 Check VS Code Output panel → select the server from dropdown. Common issues:
