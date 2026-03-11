@@ -40,11 +40,15 @@
 
     "semantic-scholar-fastmcp": {
       "type": "stdio",
-      "command": "uvx",
+      "command": "uv",
       "args": [
-        "--from",
-        "git+https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server.git",
-        "semantic-scholar-server"
+        "run",
+        "--no-project",
+        "--with", "fastmcp>=2.0.0,<3.0.0",
+        "--with", "httpx>=0.24.0",
+        "fastmcp",
+        "run",
+        "${env:HOME}/.bio-mcp-servers/semantic-scholar/run.py"
       ],
       "env": {
         "SEMANTIC_SCHOLAR_API_KEY": "${input:semantic-scholar-api-key}"
@@ -53,11 +57,12 @@
 
     "academic-search-mcp": {
       "type": "stdio",
-      "command": "uvx",
+      "command": "uv",
       "args": [
-        "--from",
-        "git+https://github.com/afrise/academic-search-mcp-server.git",
-        "academic-search-mcp-server"
+        "run",
+        "--with", "mcp[cli]>=1.2.1",
+        "--with", "httpx>=0.28.1",
+        "https://raw.githubusercontent.com/afrise/academic-search-mcp-server/master/server.py"
       ],
       "env": {
         "SEMANTIC_SCHOLAR_API_KEY": "${input:semantic-scholar-api-key}",
