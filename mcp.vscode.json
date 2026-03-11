@@ -72,10 +72,9 @@
 
     "medical-mcp": {
       "type": "stdio",
-      "command": "npx",
+      "command": "node",
       "args": [
-        "-y",
-        "medical-mcp"
+        "${env:HOME}/.bio-mcp-servers/medical-mcp/build/index.js"
       ],
       "env": {
         "CACHE_ENABLED": "true"

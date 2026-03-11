@@ -22,8 +22,37 @@ if (Test-Path $configFile) {
     Write-Host "Backed up existing config to: $backup" -ForegroundColor Yellow
 }
 
-# Copy config
+# Clone semantic-scholar server (requires local clone due to multi-file package structure)
+$semsDir = "$env:USERPROFILE\.bio-mcp-servers\semantic-scholar"
+if (Test-Path $semsDir) {
+    Write-Host "Updating semantic-scholar server..." -ForegroundColor Cyan
+    git -C $semsDir pull
+} else {
+    Write-Host "Cloning semantic-scholar server..." -ForegroundColor Cyan
+    New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.bio-mcp-servers" | Out-Null
+    git clone https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server.git $semsDir
+}
+
+# Clone/build medical-mcp locally to avoid broken npx bin shim on Unix
+$medicalDir = "$env:USERPROFILE\.bio-mcp-servers\medical-mcp"
+if (Test-Path $medicalDir) {
+    Write-Host "Updating medical-mcp server..." -ForegroundColor Cyan
+    git -C $medicalDir pull
+} else {
+    Write-Host "Cloning medical-mcp server..." -ForegroundColor Cyan
+    New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.bio-mcp-servers" | Out-Null
+    git clone https://github.com/jamesanz/medical-mcp.git $medicalDir
+}
+
+Write-Host "Installing/building medical-mcp..." -ForegroundColor Cyan
+Push-Location $medicalDir
+npm install --no-audit --no-fund
+npx tsc
+Pop-Location
+
+# Copy config and fix path for Windows (HOME -> USERPROFILE)
 Copy-Item "mcp.vscode.json" $configFile -Force
+(Get-Content $configFile -Raw) -replace '\$\{env:HOME\}', '${env:USERPROFILE}' | Set-Content $configFile -NoNewline
 
 Write-Host "Config installed to: $configFile" -ForegroundColor Green
 Write-Host ""

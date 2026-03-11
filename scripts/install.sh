@@ -33,6 +33,35 @@ if [ -f "$VSCODE_CONFIG" ]; then
     echo "Backed up existing config to: $BACKUP"
 fi
 
+# Clone semantic-scholar server (requires local clone due to multi-file package structure)
+SEMS_DIR="$HOME/.bio-mcp-servers/semantic-scholar"
+if [ -d "$SEMS_DIR" ]; then
+    echo "Updating semantic-scholar server..."
+    git -C "$SEMS_DIR" pull
+else
+    echo "Cloning semantic-scholar server..."
+    mkdir -p "$HOME/.bio-mcp-servers"
+    git clone https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server.git "$SEMS_DIR"
+fi
+
+# Clone/build medical-mcp locally to avoid broken npx bin shim on Unix
+MEDICAL_DIR="$HOME/.bio-mcp-servers/medical-mcp"
+if [ -d "$MEDICAL_DIR" ]; then
+    echo "Updating medical-mcp server..."
+    git -C "$MEDICAL_DIR" pull
+else
+    echo "Cloning medical-mcp server..."
+    mkdir -p "$HOME/.bio-mcp-servers"
+    git clone https://github.com/jamesanz/medical-mcp.git "$MEDICAL_DIR"
+fi
+
+echo "Installing/building medical-mcp..."
+(
+    cd "$MEDICAL_DIR"
+    npm install --no-audit --no-fund
+    npm run build
+)
+
 # Copy config
 cp mcp.vscode.json "$VSCODE_CONFIG"
 
